@@ -1,0 +1,9 @@
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\obj\Debug\POS_terminal.csprojAssemblyReference.cache
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\obj\Debug\POS_terminal.csproj.CoreCompileInputs.cache
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\bin\Debug\data.txt
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\bin\Debug\POS_terminal.exe.config
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\bin\Debug\POS_terminal.exe
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\bin\Debug\POS_terminal.pdb
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\obj\Debug\POS_terminal.exe
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\obj\Debug\POS_terminal.pdb
+C:\Users\rtoles\Desktop\POS_Terminal\POS_terminal\POS_terminal\bin\Debug\cactus_castle_data.csv
