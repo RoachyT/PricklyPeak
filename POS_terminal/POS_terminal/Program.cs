@@ -15,7 +15,11 @@ namespace POS_terminal
             DirectoryInfo directory = new DirectoryInfo(currentDirectory);
             var fileName = Path.Combine(directory.FullName, "cactus_castle_data.csv");
             var fileContents = ReadFile(fileName);
-            Console.WriteLine(fileContents);
+            string[] fileLines = fileContents.Split(new char[] { '\r', '\n' },StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in fileLines)
+            {
+                Console.WriteLine(line);
+            }
 
         }
 
