@@ -1,13 +1,12 @@
-﻿number,name,category,description,price 
-1,Easter Cactus,plant,Cactus that blooms around easter time. Pink flowers.,5.00
-2,Prickly Pear Cactus,plant,"Flat, fleshy cactus with large pads. Can have yellow, red or purple flowers. ",5.00
-3,Bunny Ear Cactus,plant,Short clusters. Rarely will bloom yellow flowers. ,5.00
-4,Fairy Castle Cactus,plant,Resembles a fairy castle with many small arms. White flowers bloom at night. ,5.00
-5,Zebra Cactus,plant,This is actually a succulent called a cactus. Shaped like an aloe plant with thick white stripes. ,5.00
+﻿1,Easter Cactus,plant,Cactus that blooms around easter time. Pink flowers.,4.99
+2,Prickly Pear Cactus,plant,Flat cactus with large pads., 4.99
+3,Bunny Ear Cactus,plant,Short clusters. Rarely will bloom yellow flowers. ,4.99
+4,Fairy Castle Cactus,plant,Resembles a fairy castle with many small arms. White flowers bloom at night. ,4.99
+5,Zebra Cactus,plant,This is actually a succulent called a cactus. Shaped like an aloe plant with thick white stripes. ,4.99
 6,4 in. Terra Cotta Clay Pot ,supplies,4 in. Terra Cotta Clay Pot ,0.97
 7,6 in. Terra Cotta Clay Pot,supplies,6 in. Terra Cotta Clay Pot,1.89
 8,10 in. Terra Cotta Clay Pot,supplies,10 in. Terra Cotta Clay Pot,3.29
-9,Potting Soil (5lb bag),supplies,Five pound bag of cactus potting soil. Well draining. ,10.50
+9,Potting Soil (5LB bag),supplies,Five pound bag of cactus potting soil. Well draining. ,10.99
 10,3 Cactus assortment ,assortment,Random assortment of 3 cactus' in a 4 in. terra cotta pot. ,15.99
 11,5 cactus assortment ,assortment,Random assortment of 3 cactus' in a 6 in. terra cotta pot. ,22.99
-12,Old Man Cactus,plant,"Tall cactus with long, white hairs that look like an old man. Flowers can be red, yellow or white.",5.00
+12,Old Man Cactus,plant,Tall cactus with long white hairs that look like an old man.,9.99
