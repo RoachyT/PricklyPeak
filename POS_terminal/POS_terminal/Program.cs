@@ -10,7 +10,7 @@ namespace POS_terminal
     class Program
     {
         //create a shopping cart to hold items to purchase 
-        public static List<object> ShoppingCart = new List<object> { };
+        public static List<Products> ShoppingCart = new List<Products> { };
         public static string currentDirectory = Directory.GetCurrentDirectory();
         public static  DirectoryInfo directory = new DirectoryInfo(currentDirectory);
         public static string fileName = Path.Combine(directory.FullName, "cactus_castle_data.csv");
@@ -20,6 +20,7 @@ namespace POS_terminal
             Console.WriteLine("Welcome to the Prickly Peak!");
             Console.WriteLine("Your local Cactus Shoppe\n");
             MainMenu();
+           
         }
 
         public static string ReadFile(string fileName)
@@ -92,7 +93,11 @@ namespace POS_terminal
             int itemID = int.Parse(Console.ReadLine());
             Console.WriteLine("How many would you like?");
             int quanity = int.Parse(Console.ReadLine());
-
+            // take itemID and use it to grab the whole Line and add it to shopping cart. Iterate as many times as the quanity.
+            for (int i = 0; i < quanity; i++)
+            {
+                ShoppingCart.Add(readFile[itemID -1]); 
+            }
             // select item from the list, make a copy of it, and add it to the empty shopping cart list 
 
             ContinuePurchase();
@@ -103,6 +108,7 @@ namespace POS_terminal
             // allow client to redisplay the menu and to complete the purchase 
             Console.WriteLine("Would you like to buy another item? y/n");
             string continuePurchase = Console.ReadLine().ToLower();
+            var readFile = ReadCactusData(fileName);
             if (continuePurchase == "yes" || continuePurchase == "y")
             {
                 MainMenu();
@@ -110,7 +116,7 @@ namespace POS_terminal
             }
             else if (continuePurchase == "no" || continuePurchase == "n")
             {
-                CheckOut();
+                CheckOut(ShoppingCart);
             }
             else
             {
@@ -119,14 +125,26 @@ namespace POS_terminal
             }
         }
 
-        static void CheckOut()
+        static void CheckOut(List<Products> ShoppingCart)
         {
             //iterate through shopping cart to determine the subtotal and print the list to the screen 
+            Console.WriteLine("\nHere is your shopping cart: \n");
+            foreach (Products x in ShoppingCart)
+            {
+                Console.WriteLine("{0,-40}${1,-20}", x.Name, x.Price);
+            }
+            double total = 0;
+            foreach (Products y in ShoppingCart)
+            {
+                total += y.Price;
+               
+            }
+            Console.WriteLine($"\nSubtotal: ${total}");
+            double plusTax = (total * .06) + total;
+            double finalTotal = Math.Round(plusTax, 2);
 
-
-           
             //display total including tax 
-
+            Console.WriteLine($"\nFinal Total: ${finalTotal}");
 
             GetPayment();
 
@@ -136,6 +154,7 @@ namespace POS_terminal
             // Allow user to choose a quanity for the item ordered 
             // Add item to the shopping cart 
         }
+
         static void GetPayment()
         {
             //ask for payment type- cash, credit or check 
