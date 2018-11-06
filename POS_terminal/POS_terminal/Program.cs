@@ -85,10 +85,12 @@ namespace POS_terminal
         static void MainMenu()
         {
             //present a menu to the user and allow them to choose an item by number or letter 
-
+           
             var readFile = ReadCactusData(fileName);
             PrintMe(readFile);
-          //print list of objects here 
+           
+            // Allow user to choose a quanity for the item ordered 
+            // Add item to the shopping cart 
             Console.WriteLine("\nWhat would you like to purchase? Choose a number: ");
             int itemID = int.Parse(Console.ReadLine());
             Console.WriteLine("How many would you like?");
@@ -103,6 +105,7 @@ namespace POS_terminal
             ContinuePurchase();
            
         }
+
         static void ContinuePurchase()
         {
             // allow client to redisplay the menu and to complete the purchase 
@@ -146,16 +149,11 @@ namespace POS_terminal
             //display total including tax 
             Console.WriteLine($"\nFinal Total: ${finalTotal}");
 
-            GetPayment();
+            GetPayment(finalTotal);
 
         }
-        static void GrabProduct()
-        {
-            // Allow user to choose a quanity for the item ordered 
-            // Add item to the shopping cart 
-        }
-
-        static void GetPayment()
+        
+        static void GetPayment(double finalTotal)
         {
             //ask for payment type- cash, credit or check 
             Console.WriteLine("How would you like to pay?");
@@ -165,48 +163,59 @@ namespace POS_terminal
             int paymentType = int.Parse(Console.ReadLine());
             if (paymentType == 1)
             {
-                CashBack();
+                CashBack(ShoppingCart, finalTotal);
             }
             else if (paymentType == 2)
             {
-                CreditCard();
+                CreditCard(ShoppingCart, finalTotal);
             }
             else if (paymentType == 3)
             {
-                Check();
+                Check(ShoppingCart, finalTotal);
             }
             else
             {
                 Console.WriteLine("That was not a choice, please try again");
-                GetPayment();
+                GetPayment(finalTotal);
             }
         }
 
-        static void CashBack()
+        static void CashBack(List<Products> ShoppingCart, double finalTotal)
         {
             //For cash, ask for amount tendered and provide change 
+            Console.WriteLine($"Total Due: {finalTotal}");
+            Console.WriteLine("What amount are you paying with?");
+            double payWithAmount = double.Parse(Console.ReadLine());
 
+            
+            string paymentInfo = (payWithAmount - finalTotal).ToString();
+            Console.WriteLine($"Change: {paymentInfo}");
 
-            DisplayReceipt();
+            DisplayReceipt(ShoppingCart,finalTotal);
         }
 
-        static void Check()
+        static void Check(List<Products> ShoppingCart, double finalTotal)
         {
             //ask for routing and account number 
+            Console.WriteLine("Please enter your Routing number:");
+            int routingNum = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter your Account number: ");
+            int acctNum = int.Parse(Console.ReadLine());
 
 
-            DisplayReceipt();
+            DisplayReceipt(ShoppingCart, finalTotal);
         }
 
-        static void CreditCard()
+        static void CreditCard(List<Products> ShoppingCart, double finalTotal)
         {
             //get cc number, expiration date and cvv 
 
 
-            DisplayReceipt();
+            DisplayReceipt(ShoppingCart, finalTotal);
         }
 
-        static void DisplayReceipt()
+        static void DisplayReceipt(List<Products> ShoppingCart, double finalTotal)
         {
             //Display Receipt will all items ordered, subtotal, grand total, and payment info
             //build in security function to not show whole cc number or routing/acct numb
