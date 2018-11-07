@@ -11,7 +11,7 @@ namespace POS_terminal
         public int ProductNumber { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public Category Category { get; set; }
         
         
@@ -20,7 +20,7 @@ namespace POS_terminal
 
         }
 
-        public Products(int productNumber, string name, string description, double price)
+        public Products(int productNumber, string name, string description, decimal price)
         {
             Name = name;
             Description = description;

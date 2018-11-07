@@ -67,7 +67,7 @@ namespace POS_terminal
         }
         public bool ValidateAcctNum(string acctNum)
         {
-            if (Regex.IsMatch(acctNum, @"([0-9]{9})"))
+            if (Regex.IsMatch(acctNum, @"([0-9]{10})"))
             {
                 return true;
             }
@@ -79,7 +79,7 @@ namespace POS_terminal
 
         public bool ValidateRoutNum(string routingNum)
         {
-            if (Regex.IsMatch(routingNum, @"([0-9]{10})"))
+            if (Regex.IsMatch(routingNum, @"([0-9]{9})"))
             {
                 return true;
             }

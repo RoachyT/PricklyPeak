@@ -16,10 +16,12 @@ namespace POS_terminal
         public static string fileName = Path.Combine(directory.FullName, "cactus_castle_data.csv");
         public static List<Products> fileContents = ReadCactusData(fileName);
         public static ValidatePayment val = new ValidatePayment();
+        public static  decimal taxValue = 0.06m;
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Prickly Peak!");
             Console.WriteLine("Your local Cactus Shoppe\n");
+            Console.WriteLine("*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^");
             MainMenu();
 
         }
@@ -61,8 +63,8 @@ namespace POS_terminal
                     product.Description = values[3];
 
 
-                    double parseDbl;
-                    if (double.TryParse(values[4], out parseDbl))
+                    decimal parseDbl;
+                    if (decimal.TryParse(values[4], out parseDbl))
 
                     {
                         product.Price = parseDbl;
@@ -76,6 +78,7 @@ namespace POS_terminal
         static void PrintMe(List<Products> ReadCactusData)
         {
             Console.WriteLine("{0,-5}{1,-40}{2,-20}", "", "Item", "Price");
+            Console.WriteLine("*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^");
             foreach (Products item in ReadCactusData)
             {
 
@@ -86,24 +89,50 @@ namespace POS_terminal
         static void MainMenu()
         {
             //present a menu to the user and allow them to choose an item by number or letter 
-
+            try
+            {
             var readFile = ReadCactusData(fileName);
             PrintMe(readFile);
 
-            // Allow user to choose a quanity for the item ordered 
-            // Add item to the shopping cart 
+                // Allow user to choose a quanity for the item ordered 
+                // Add item to the shopping cart
+               
             Console.WriteLine("\nWhat would you like to purchase? Choose a number: ");
             int itemID = int.Parse(Console.ReadLine());
-            Console.WriteLine("How many would you like?");
-            int quanity = int.Parse(Console.ReadLine());
-            // take itemID and use it to grab the whole Line and add it to shopping cart. Iterate as many times as the quanity.
-            for (int i = 0; i < quanity; i++)
-            {
-                ShoppingCart.Add(readFile[itemID - 1]);
-            }
-            // select item from the list, make a copy of it, and add it to the empty shopping cart list 
+                if (itemID <= 12)
+                {
+                    Console.WriteLine("How many would you like?");
+                    int quanity = int.Parse(Console.ReadLine());
+                    // take itemID and use it to grab the whole Line and add it to shopping cart. Iterate as many times as the quanity.
+                    if (quanity <= 50)
+                    {
+                    for (int i = 0; i < quanity; i++)
+                    {
+                        ShoppingCart.Add(readFile[itemID - 1]);
+                    }
+                    // select item from the list, make a copy of it, and add it to the empty shopping cart list 
 
-            ContinuePurchase();
+                    ContinuePurchase();
+                    }
+                    else
+                    {
+                        Console.WriteLine("We only sell a max of 50 of each item. Try again.");
+                        MainMenu();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Try again, pal.");
+                    MainMenu();
+                }
+                
+            }
+            catch (FormatException)
+            {
+
+                Console.WriteLine("What?");
+                MainMenu();
+            }
 
         }
 
@@ -137,15 +166,15 @@ namespace POS_terminal
             {
                 Console.WriteLine("{0,-40}${1,-20}", x.Name, x.Price);
             }
-            double total = 0;
+            decimal total = 0;
             foreach (Products y in ShoppingCart)
             {
                 total += y.Price;
 
             }
             Console.WriteLine($"\nSubtotal: ${total}");
-            double plusTax = (total * .06) + total;
-            double finalTotal = Math.Round(plusTax, 2);
+            decimal plusTax = (total * taxValue) + total;
+            decimal finalTotal = Math.Round(plusTax, 2);
 
             //display total including tax 
             Console.WriteLine($"\nFinal Total: ${finalTotal}");
@@ -154,7 +183,7 @@ namespace POS_terminal
 
         }
 
-        static void GetPayment(double finalTotal)
+        static void GetPayment(decimal finalTotal)
         {
             try
             {
@@ -190,19 +219,19 @@ namespace POS_terminal
             }
         }
     
-        static void CashBack(List<Products> ShoppingCart, double finalTotal)
+        static void CashBack(List<Products> ShoppingCart, decimal finalTotal)
         {
             //For cash, ask for amount tendered and provide change 
             Console.WriteLine($"Total Due: {finalTotal}");
             Console.WriteLine("What amount are you paying with?");
-            double payWithAmount = double.Parse(Console.ReadLine());
+            decimal payWithAmount = decimal.Parse(Console.ReadLine());
             string paymentInfo = (payWithAmount - finalTotal).ToString();
             Console.WriteLine($"Change: {paymentInfo}");
 
             DisplayReceiptCash(ShoppingCart,finalTotal,payWithAmount, paymentInfo);
         }
 
-        static void Check(List<Products> ShoppingCart, double finalTotal)
+        static void Check(List<Products> ShoppingCart, decimal finalTotal)
         {
             //ask for routing and account number 
             Console.WriteLine("Please enter your 9 digit routing number:");
@@ -229,7 +258,7 @@ namespace POS_terminal
             }  
         }
 
-        static void CreditCard(List<Products> ShoppingCart, double finalTotal)
+        static void CreditCard(List<Products> ShoppingCart, decimal finalTotal)
         {
                 //get cc number, expiration date and cvv 
                 Console.WriteLine("Please enter the 16 digit Credit Card Number");
@@ -267,7 +296,7 @@ namespace POS_terminal
                 }
         }
 
-        static void DisplayReceiptCash(List<Products> ShoppingCart, double finalTotal,  double payWithAmount, string paymentInfo)
+        static void DisplayReceiptCash(List<Products> ShoppingCart, decimal finalTotal,  decimal payWithAmount, string paymentInfo)
         {
             //Display Receipt will all items ordered, subtotal, grand total, and payment info
             //build in security function to not show whole cc number or routing/acct numb
@@ -286,22 +315,24 @@ namespace POS_terminal
             Console.WriteLine("_______________________________________________\n");
             Looper();
         }
-        static void DisplayReceiptCheck(List<Products> ShoppingCart, double finalTotal, string acctNum)
+        static void DisplayReceiptCheck(List<Products> ShoppingCart, decimal finalTotal, string acctNum)
         {
             Console.WriteLine();
             Console.WriteLine("_______________________________________________");
             Console.WriteLine("Thank you for Shopping at the Prickly Peak!");
+            Console.WriteLine("_______________________________________________");
             foreach (Products x in ShoppingCart)
             {
                 Console.WriteLine("{0,-40}${1,-20}", x.Name, x.Price);
             }
             Console.WriteLine("_______________________________________________");
-
+            Console.WriteLine($"Total:${finalTotal}");
+            Console.WriteLine($"Payment method Check: ACCT XXXXX{acctNum.Substring(5)}");
 
             Console.WriteLine("_______________________________________________\n");
             Looper();
         }
-        static void DisplayReceiptCredit(List<Products> ShoppingCart, double finalTotal, string CreditNum)
+        static void DisplayReceiptCredit(List<Products> ShoppingCart, decimal finalTotal, string CreditNum)
         {
             Console.WriteLine();
             Console.WriteLine("_______________________________________________");
@@ -311,7 +342,8 @@ namespace POS_terminal
                 Console.WriteLine("{0,-40}${1,-20}", x.Name, x.Price);
             }
             Console.WriteLine("_______________________________________________");
-
+            Console.WriteLine($"Total:${finalTotal}");
+            Console.WriteLine($"Payment method Credit XXXX-XXXX-XXXX-{CreditNum.Substring(15)}");
             Console.WriteLine("_______________________________________________\n");
             Looper();
         }
