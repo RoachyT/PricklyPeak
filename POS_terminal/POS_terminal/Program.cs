@@ -12,15 +12,16 @@ namespace POS_terminal
         //create a shopping cart to hold items to purchase 
         public static List<Products> ShoppingCart = new List<Products> { };
         public static string currentDirectory = Directory.GetCurrentDirectory();
-        public static  DirectoryInfo directory = new DirectoryInfo(currentDirectory);
+        public static DirectoryInfo directory = new DirectoryInfo(currentDirectory);
         public static string fileName = Path.Combine(directory.FullName, "cactus_castle_data.csv");
         public static List<Products> fileContents = ReadCactusData(fileName);
+        public static ValidatePayment val = new ValidatePayment();
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Prickly Peak!");
             Console.WriteLine("Your local Cactus Shoppe\n");
             MainMenu();
-           
+
         }
 
         public static string ReadFile(string fileName)
@@ -56,10 +57,10 @@ namespace POS_terminal
                     {
                         product.Category = category;
                     }
-                        
+
                     product.Description = values[3];
 
-                   
+
                     double parseDbl;
                     if (double.TryParse(values[4], out parseDbl))
 
@@ -74,7 +75,7 @@ namespace POS_terminal
 
         static void PrintMe(List<Products> ReadCactusData)
         {
-            Console.WriteLine("{0,-5}{1,-40}{2,-20}", "","Item", "Price");
+            Console.WriteLine("{0,-5}{1,-40}{2,-20}", "", "Item", "Price");
             foreach (Products item in ReadCactusData)
             {
 
@@ -85,10 +86,10 @@ namespace POS_terminal
         static void MainMenu()
         {
             //present a menu to the user and allow them to choose an item by number or letter 
-           
+
             var readFile = ReadCactusData(fileName);
             PrintMe(readFile);
-           
+
             // Allow user to choose a quanity for the item ordered 
             // Add item to the shopping cart 
             Console.WriteLine("\nWhat would you like to purchase? Choose a number: ");
@@ -98,12 +99,12 @@ namespace POS_terminal
             // take itemID and use it to grab the whole Line and add it to shopping cart. Iterate as many times as the quanity.
             for (int i = 0; i < quanity; i++)
             {
-                ShoppingCart.Add(readFile[itemID -1]); 
+                ShoppingCart.Add(readFile[itemID - 1]);
             }
             // select item from the list, make a copy of it, and add it to the empty shopping cart list 
 
             ContinuePurchase();
-           
+
         }
 
         static void ContinuePurchase()
@@ -140,7 +141,7 @@ namespace POS_terminal
             foreach (Products y in ShoppingCart)
             {
                 total += y.Price;
-               
+
             }
             Console.WriteLine($"\nSubtotal: ${total}");
             double plusTax = (total * .06) + total;
@@ -152,33 +153,44 @@ namespace POS_terminal
             GetPayment(finalTotal);
 
         }
-        
+
         static void GetPayment(double finalTotal)
         {
-            //ask for payment type- cash, credit or check 
-            Console.WriteLine("How would you like to pay?");
-            Console.WriteLine("1. Cash");
-            Console.WriteLine("2. Credit");
-            Console.WriteLine("3. Check");
-            int paymentType = int.Parse(Console.ReadLine());
-            if (paymentType == 1)
+            try
             {
-                CashBack(ShoppingCart, finalTotal);
+                //ask for payment type- cash, credit or check 
+                Console.WriteLine("How would you like to pay?");
+                Console.WriteLine("1. Cash");
+                Console.WriteLine("2. Credit");
+                Console.WriteLine("3. Check");
+                int paymentType = int.Parse(Console.ReadLine());
+                if (paymentType == 1)
+                {
+                    CashBack(ShoppingCart, finalTotal);
+                }
+                else if (paymentType == 2)
+                {
+                    CreditCard(ShoppingCart, finalTotal);
+                }
+                else if (paymentType == 3)
+                {
+                    Check(ShoppingCart, finalTotal);
+                }
+                else
+                {
+                    Console.WriteLine("That was not a choice, please try again");
+                    GetPayment(finalTotal);
+                }
             }
-            else if (paymentType == 2)
+            catch (FormatException)
             {
-                CreditCard(ShoppingCart, finalTotal);
-            }
-            else if (paymentType == 3)
-            {
-                Check(ShoppingCart, finalTotal);
-            }
-            else
-            {
+
                 Console.WriteLine("That was not a choice, please try again");
                 GetPayment(finalTotal);
             }
         }
+    
+
 
         static void CashBack(List<Products> ShoppingCart, double finalTotal)
         {
@@ -198,21 +210,73 @@ namespace POS_terminal
         {
             //ask for routing and account number 
             Console.WriteLine("Please enter your Routing number:");
-            int routingNum = int.Parse(Console.ReadLine());
+            string routingNum = Console.ReadLine();
+            if (true)
+            {
+                Console.WriteLine("Enter your Account number: ");
+                string acctNum = Console.ReadLine();
+                if (true)
+                {
+                    Console.WriteLine("Thank you!");
+                    DisplayReceipt(ShoppingCart, finalTotal);
+                }
+                else
+                {
 
-            Console.WriteLine("Enter your Account number: ");
-            int acctNum = int.Parse(Console.ReadLine());
+                }
+            }
+            else
+            {
 
-
-            DisplayReceipt(ShoppingCart, finalTotal);
+            }  
         }
 
         static void CreditCard(List<Products> ShoppingCart, double finalTotal)
         {
-            //get cc number, expiration date and cvv 
+            bool flag = true;
+            if (flag == true)
+            {
 
-
-            DisplayReceipt(ShoppingCart, finalTotal);
+                //get cc number, expiration date and cvv 
+                Console.WriteLine("Please enter the 16 digit Credit Card Number");
+                Console.WriteLine("example: xxxx-xxxx-xxxx-xxxx");
+                string CreditNum = Console.ReadLine();
+                if (val.ValidateCreditCard(CreditNum))
+                {
+                    Console.WriteLine("Please enter the Expiration Date XX/XX:");
+                    string ExpDate = Console.ReadLine();
+                    if (val.ValidateExpDate(ExpDate))
+                    {
+                        Console.WriteLine("Please Enter the 3 Digit CVV code:");
+                        string CVVcode = Console.ReadLine();
+                        if (val.ValidateCVV(CVVcode))
+                        {
+                            Console.WriteLine("Your transaction was approved!");
+                            DisplayReceipt(ShoppingCart, finalTotal);
+                        }
+                        else
+                        {
+                            Console.WriteLine("That wasn't the correct amount of digits, try again");
+                            CreditCard(ShoppingCart, finalTotal);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("That wasn't the correct amount of digits, try again");
+                        CreditCard(ShoppingCart, finalTotal);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("That wasn't the correct amount of digits, try again");
+                    CreditCard(ShoppingCart, finalTotal);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Your card was declined");
+                GetPayment(finalTotal);
+            }
         }
 
         static void DisplayReceipt(List<Products> ShoppingCart, double finalTotal)
