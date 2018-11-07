@@ -190,53 +190,47 @@ namespace POS_terminal
             }
         }
     
-
-
         static void CashBack(List<Products> ShoppingCart, double finalTotal)
         {
             //For cash, ask for amount tendered and provide change 
             Console.WriteLine($"Total Due: {finalTotal}");
             Console.WriteLine("What amount are you paying with?");
             double payWithAmount = double.Parse(Console.ReadLine());
-
-            
             string paymentInfo = (payWithAmount - finalTotal).ToString();
             Console.WriteLine($"Change: {paymentInfo}");
 
-            DisplayReceipt(ShoppingCart,finalTotal);
+            DisplayReceiptCash(ShoppingCart,finalTotal,payWithAmount, paymentInfo);
         }
 
         static void Check(List<Products> ShoppingCart, double finalTotal)
         {
             //ask for routing and account number 
-            Console.WriteLine("Please enter your Routing number:");
+            Console.WriteLine("Please enter your 9 digit routing number:");
             string routingNum = Console.ReadLine();
-            if (true)
+            if (val.ValidateRoutNum(routingNum))
             {
-                Console.WriteLine("Enter your Account number: ");
+                Console.WriteLine("Enter your 10 digit account number: ");
                 string acctNum = Console.ReadLine();
-                if (true)
+                if (val.ValidateAcctNum(acctNum))
                 {
                     Console.WriteLine("Thank you!");
-                    DisplayReceipt(ShoppingCart, finalTotal);
+                    DisplayReceiptCheck(ShoppingCart, finalTotal, acctNum);
                 }
                 else
                 {
-
+                    Console.WriteLine("That wasn't the correct amount of digits, try again");
+                    Check(ShoppingCart, finalTotal);
                 }
             }
             else
             {
-
+                Console.WriteLine("That wasn't the correct amount of digits, try again");
+                Check(ShoppingCart, finalTotal);
             }  
         }
 
         static void CreditCard(List<Products> ShoppingCart, double finalTotal)
         {
-            bool flag = true;
-            if (flag == true)
-            {
-
                 //get cc number, expiration date and cvv 
                 Console.WriteLine("Please enter the 16 digit Credit Card Number");
                 Console.WriteLine("example: xxxx-xxxx-xxxx-xxxx");
@@ -252,7 +246,7 @@ namespace POS_terminal
                         if (val.ValidateCVV(CVVcode))
                         {
                             Console.WriteLine("Your transaction was approved!");
-                            DisplayReceipt(ShoppingCart, finalTotal);
+                            DisplayReceiptCredit(ShoppingCart, finalTotal, CreditNum);
                         }
                         else
                         {
@@ -271,25 +265,61 @@ namespace POS_terminal
                     Console.WriteLine("That wasn't the correct amount of digits, try again");
                     CreditCard(ShoppingCart, finalTotal);
                 }
-            }
-            else
-            {
-                Console.WriteLine("Your card was declined");
-                GetPayment(finalTotal);
-            }
         }
 
-        static void DisplayReceipt(List<Products> ShoppingCart, double finalTotal)
+        static void DisplayReceiptCash(List<Products> ShoppingCart, double finalTotal,  double payWithAmount, string paymentInfo)
         {
             //Display Receipt will all items ordered, subtotal, grand total, and payment info
             //build in security function to not show whole cc number or routing/acct numb
+            Console.WriteLine();
+            Console.WriteLine("_______________________________________________");
+            Console.WriteLine("Thank you for Shopping at the Prickly Peak!");
+            Console.WriteLine("_______________________________________________");
+            foreach (Products x in ShoppingCart)
+            {
+                Console.WriteLine("{0,-40}${1,-20}", x.Name, x.Price);
+            }
+            Console.WriteLine("_______________________________________________");
+            Console.WriteLine($"Total:${finalTotal}");
+            Console.WriteLine($"Payment method Cash: ${payWithAmount}");
+            Console.WriteLine($"Change: ${paymentInfo}");
+            Console.WriteLine("_______________________________________________\n");
+            Looper();
+        }
+        static void DisplayReceiptCheck(List<Products> ShoppingCart, double finalTotal, string acctNum)
+        {
+            Console.WriteLine();
+            Console.WriteLine("_______________________________________________");
+            Console.WriteLine("Thank you for Shopping at the Prickly Peak!");
+            foreach (Products x in ShoppingCart)
+            {
+                Console.WriteLine("{0,-40}${1,-20}", x.Name, x.Price);
+            }
+            Console.WriteLine("_______________________________________________");
 
+
+            Console.WriteLine("_______________________________________________\n");
+            Looper();
+        }
+        static void DisplayReceiptCredit(List<Products> ShoppingCart, double finalTotal, string CreditNum)
+        {
+            Console.WriteLine();
+            Console.WriteLine("_______________________________________________");
+            Console.WriteLine("Thank you for Shopping at the Prickly Peak!");
+            foreach (Products x in ShoppingCart)
+            {
+                Console.WriteLine("{0,-40}${1,-20}", x.Name, x.Price);
+            }
+            Console.WriteLine("_______________________________________________");
+
+            Console.WriteLine("_______________________________________________\n");
             Looper();
         }
 
+
         static void Looper()
         {
-            Console.WriteLine("Would you like to do another transaction?");
+            Console.WriteLine("Would you like to do another transaction? y/n");
             string looping = Console.ReadLine().ToLower();
             if (looping == "yes" || looping == "y")
             {
