@@ -16,7 +16,9 @@ namespace POS_terminal
         public static string fileName = Path.Combine(directory.FullName, "cactus_castle_data.csv");
         public static List<Products> fileContents = ReadCactusData(fileName);
         public static ValidatePayment val = new ValidatePayment();
-        public static  decimal taxValue = 0.06m;
+        public static CalculatePrice CalcPrice = new CalculatePrice();
+        public static CalculateTotal CalcTotal = new CalculateTotal();
+        
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Prickly Peak!");
@@ -173,13 +175,14 @@ namespace POS_terminal
 
             }
             Console.WriteLine($"\nSubtotal: ${total}");
-            decimal plusTax = (total * taxValue) + total;
-            decimal finalTotal = Math.Round(plusTax, 2);
+            //decimal plusTax = (total * taxValue) + total;
+            //decimal finalTotal = Math.Round(plusTax, 2);
 
             //display total including tax 
-            Console.WriteLine($"\nFinal Total: ${finalTotal}");
+            Console.WriteLine($"\nTax: ${CalcPrice.GetTax(total)}");
+            Console.WriteLine($"\nFinal Total: ${CalcTotal.GetFinalTotal(total)}");
 
-            GetPayment(finalTotal);
+            GetPayment(CalcTotal.GetFinalTotal(total));
 
         }
 
