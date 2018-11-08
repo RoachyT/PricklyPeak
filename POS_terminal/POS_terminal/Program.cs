@@ -101,12 +101,12 @@ namespace POS_terminal
                
             Console.WriteLine("\nWhat would you like to purchase? Choose a number: ");
             int itemID = int.Parse(Console.ReadLine());
-                if (itemID <= 12)
+                if (itemID <= 12 && itemID >= 1)
                 {
                     Console.WriteLine("How many would you like?");
                     int quanity = int.Parse(Console.ReadLine());
                     // take itemID and use it to grab the whole Line and add it to shopping cart. Iterate as many times as the quanity.
-                    if (quanity <= 50)
+                    if (quanity <= 50 && quanity > 0)
                     {
                     for (int i = 0; i < quanity; i++)
                     {
@@ -228,10 +228,19 @@ namespace POS_terminal
             Console.WriteLine($"Total Due: {finalTotal}");
             Console.WriteLine("What amount are you paying with?");
             decimal payWithAmount = decimal.Parse(Console.ReadLine());
-            string paymentInfo = (payWithAmount - finalTotal).ToString();
-            Console.WriteLine($"Change: {paymentInfo}");
+            if (payWithAmount >= finalTotal)
+            {
+                string paymentInfo = (payWithAmount - finalTotal).ToString();
+                Console.WriteLine($"Change: {paymentInfo}");
 
-            DisplayReceiptCash(ShoppingCart,finalTotal,payWithAmount, paymentInfo);
+                DisplayReceiptCash(ShoppingCart, finalTotal, payWithAmount, paymentInfo);
+            }
+            else
+            {
+                Console.WriteLine("That ain't it, Chief. Try again");
+                CashBack(ShoppingCart, finalTotal);
+            }
+            
         }
 
         static void Check(List<Products> ShoppingCart, decimal finalTotal)
